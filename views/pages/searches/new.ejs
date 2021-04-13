@@ -1,0 +1,43 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Search</h1>
+    <form action="/searches" method="POST">
+        <input type="text" name="title" placeholder="Enter a title or auther"><br>
+      <lable><input type="radio" id="title" name="search" value="intitle">Title</lable><br>  
+       <label><input type="radio" id="auther" name="search"value="inauthor">Auther</label><br>
+  <button>Search The Google Books API</button>
+    </form>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Look for new book!</h1>
+  <form action="/searches" method="POST">
+    <input type="text" name="book" placeholder="Enter Title or Author">
+    <div> 
+      <label for="title">Title</label>
+      <input type="radio" name="title">
+    </div>
+    <div> 
+      <label for="author">Author</label>
+      <input type="radio" name="author">
+    </div>
+   <button>search the Google Books API</button>
+</form>
+</body>
+</html>
