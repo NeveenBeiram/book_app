@@ -44,6 +44,11 @@ server.post('/searches', (req,res)=>{
         return new Book (item); });
       //   res.send(bookObjArr);// for testing
       res.render('pages/searches/show',{renderBookData:bookObjArr} );
+    })
+    .catch(error => {
+      console.log('Error in getting data from Google Books API');
+      console.error(error);
+      res.render('pages/searches/error', { errors: error });
     });
 });
 
