@@ -28,8 +28,8 @@
 <img src="<%= item.image_url %>">
 <p><%= item.title %></p>
 <p><%= item.author %></p>
-<p><%= item.description %></p>    
-<form action="/books/<%= item.id %>" method="GET">
+<!-- <p><%= item.description %></p>     -->
+<form action="/books/<%=item.id %>" method="GET">
     <input type="hidden" name="title" value="<%= item.title %>">
     <input type="hidden" name="author" value="<%= item.author %>">
     <input type="hidden" name="description" value="<%= item.description %>">

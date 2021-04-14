@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const superagent = require('superagent');
 const pg = require('pg');
+const methodOverride = require('method-override');
 
 const PORT = process.env.PORT || 3000;
 const server = express();
@@ -12,6 +13,8 @@ server.use(express.static('./public'));
 server.set('view engine','ejs');
 
 server.use(express.urlencoded({extended:true}));
+
+server.use(methodOverride('_method'));
 
 const client = new pg.Client(process.env.DATABASE_URL);
 
@@ -22,9 +25,11 @@ server.get('/',(req,res)=>{
   let SQL=`SELECT * FROM bookshelf ;`;
   client.query(SQL)
     .then (bookAppData=>{
-      console.log(bookAppData.rows);
+      let bookCount = bookAppData.rows.length;
+      // console.log(bookAppData.rows);
       // res.send(bookAppData.rows);
-      res.render('pages/index',{books:bookAppData.rows});
+
+      res.render('pages/index',{books:bookAppData.rows,count:bookCount});
     })
     .catch(error=>{
       res.send(error);
@@ -84,6 +89,22 @@ server.get('/books/:id',(req,res)=>{
       res.render('pages/books/detail',{detail:results.rows[0]});
     });
 
+});
+server.delete('/deleteBook/:id',(req,res)=>{
+  let SQL = `DELETE FROM bookshelf WHERE id=$1;`;
+  let value = [req.params.id];
+  client.query(SQL,value)
+    .then(res.redirect('/'));
+});
+
+server.put('/updateBook/:id',(req,res)=>{
+  let {author,title,isbn,image_url,description} = req.body;
+  let SQL = `UPDATE bookshelf SET author=$1,title=$2,isbn=$3,image_url=$4,description=$5 WHERE id=$6;`;
+  let safeValues = [author,title,isbn,image_url,description,req.params.id];
+  client.query(SQL,safeValues)
+    .then(()=>{
+      res.redirect(`/books/${req.params.id}`);
+    });
 });
 
 

@@ -20,9 +20,33 @@
         <p><%= detail.title %></p>
         <p><%= detail.author %></p>
         <p><%= detail.description %></p>
-        <p>ISBN: <%= bookDetail.isbn %></p>
+        <p>ISBN: <%= detail.isbn %></p>
         </div>
+
+        <form action="/deleteBook/<%=detail.id%>?_method=delete" method="post">
+          <button>Delete Book</button>
+      </form>
+      <button id='updateBtn'>Update</button>
+
   </section>
-  </main>
+
+  <section id='updateForm'>
+    <form action="/updateBook/<%=detail.id%>?_method=put" method="post">
+     <input type="text" name="title" placeholder="Populated title"  value=' <%= detail.title  %> '>
+     <br>
+     <input type="text" name="author" placeholder="Populated author" value="<%= detail.author  %>">
+     <br>
+     <input type="text" name="image_url" placeholder="Populated image url"value="<%= detail.image_url %>">
+     <br>
+     <input type="text" name="isbn" placeholder="Populated ISBN" value="<%= detail.isbn  %>">
+     <br>
+     <textarea name="description" placeholder="Populated description" cols="30" rows="10"><%= detail.description %></textarea>
+     <br>
+     <button type="submit">Update Book</button>
+  </form>
+  </section>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
