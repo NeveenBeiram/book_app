@@ -16,7 +16,13 @@ server.use(express.urlencoded({extended:true}));
 
 server.use(methodOverride('_method'));
 
-const client = new pg.Client(process.env.DATABASE_URL);
+// const client = new pg.Client(process.env.DATABASE_URL);
+const client = new pg.Client( {
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized : false
+  }
+});
 
 
 
