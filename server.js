@@ -3,17 +3,37 @@
 require('dotenv').config();
 const express = require('express');
 const superagent = require('superagent');
+const pg = require('pg');
 
 const PORT = process.env.PORT || 3000;
 const server = express();
-server.set('view engine','ejs');
+
 server.use(express.static('./public'));
+server.set('view engine','ejs');
 
 server.use(express.urlencoded({extended:true}));
 
+const client = new pg.Client(process.env.DATABASE_URL);
+
+
+
+
 server.get('/',(req,res)=>{
-  res.render('pages/index');
+  let SQL=`SELECT * FROM bookshelf ;`;
+  client.query(SQL)
+    .then (bookAppData=>{
+      console.log(bookAppData.rows);
+      // res.send(bookAppData.rows);
+      res.render('pages/index',{books:bookAppData.rows});
+    })
+    .catch(error=>{
+      res.send(error);
+      // res.render('pages/index');
+      res.render('pages/searches/error', { errors: error });
+    });
+
 });
+
 
 //just for test, proof of life
 server.get('/hello',(req,res)=>{
@@ -39,16 +59,45 @@ server.post('/searches', (req,res)=>{
   superagent.get(bookAuthorURL)
     .then(fullBookData => {
       let bookData = fullBookData.body.items;
-      console.log(bookData);
+      // console.log(bookData);
       let bookObjArr = bookData.map(item => {
         return new Book (item); });
       //   res.send(bookObjArr);// for testing
       res.render('pages/searches/show',{renderBookData:bookObjArr} );
     })
-    .catch(error => {
-      console.log('Error in getting data from Google Books API');
-      console.error(error);
-      res.render('pages/searches/error', { errors: error });
+    .catch(() => {
+      // console.log('Error in getting data from Google Books API');
+      // console.error(error);
+      res.render('pages/searches/error', { errors: searchTerm });
+    });
+});
+
+server.get('/books/:id',(req,res)=>{
+// console.log('params');
+// console.log(req.params);
+  let SQL=`SELECT * FROM bookshelf WHERE id=$1;`;
+  let safeValues=[req.params.id];
+  client.query(SQL,safeValues)
+    .then(results=>{
+      // console.log(results.rows);
+      // res.send(results.rows[0]);
+      res.render('pages/books/detail',{detail:results.rows[0]});
+    });
+
+});
+
+
+
+server.post('/books',(req,res)=>{
+// console.log(req.body);
+  let {auther,title,isbn,image_url,description}=req.body;
+  let SQL=`INSERT INTO bookshelf (author,title,isbn,image_url,description)VALUES ($1,$2,$3,$4,$5) RETURNING *;`;
+  let safeValues=[auther,title,isbn,image_url,description];
+  client.query(SQL,safeValues)
+    .then(results =>{
+      // console.log(results.rows);
+      // res.send(results.rows);
+      res.redirect(`/books/${results.rows[0].id}`);
     });
 });
 
@@ -105,6 +154,15 @@ server.get('*',(req,res)=>{
   res.send('Error');
 });
 
-server.listen(PORT,()=>{
-  console.log(`Listening on PORT ${PORT}`);
-});
+// server.listen(PORT,()=>{
+//   console.log(`Listening on PORT ${PORT}`);
+// });
+
+client.connect()
+  .then(() => {
+    server.listen(PORT, () =>
+      console.log(`listening on ${PORT}`));
+
+  }).catch(error=>{
+    console.log(error);
+  });
