@@ -38,7 +38,7 @@ server.get('/',(req,res)=>{
       res.render('pages/index',{books:bookAppData.rows,count:bookCount});
     })
     .catch(error=>{
-      res.send(error);
+      // res.send(error);
       // res.render('pages/index');
       res.render('pages/searches/error', { errors: error });
     });
@@ -58,15 +58,16 @@ server.get('/searches/new',(req,res)=>{
 server.post('/searches', (req,res)=>{
 
   let searchTerm = req.body.book;
-  let bookAuthorURL;
+  let choice=req.body.choice;
+  let bookAuthorURL=`https://www.googleapis.com/books/v1/volumes?q=${choice}:${searchTerm}`;
   // console.log(req.body);
-  if (req.body.title === 'on')
-  {
-    bookAuthorURL = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchTerm}`;
-  } else if (req.body.author === 'on')
-  {
-    bookAuthorURL = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${searchTerm}`;
-  }
+  // if (req.body.title === 'on')
+  // {
+  //   bookAuthorURL = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchTerm}`;
+  // } else if (req.body.author === 'on')
+  // {
+  //   bookAuthorURL = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${searchTerm}`;
+  // }
   superagent.get(bookAuthorURL)
     .then(fullBookData => {
       let bookData = fullBookData.body.items;
@@ -117,9 +118,9 @@ server.put('/updateBook/:id',(req,res)=>{
 
 server.post('/books',(req,res)=>{
 // console.log(req.body);
-  let {auther,title,isbn,image_url,description}=req.body;
+  let {author,title,isbn,image_url,description}=req.body;
   let SQL=`INSERT INTO bookshelf (author,title,isbn,image_url,description)VALUES ($1,$2,$3,$4,$5) RETURNING *;`;
-  let safeValues=[auther,title,isbn,image_url,description];
+  let safeValues=[author,title,isbn,image_url,description];
   client.query(SQL,safeValues)
     .then(results =>{
       // console.log(results.rows);
@@ -171,10 +172,13 @@ server.post('/books',(req,res)=>{
 
 function Book (oneBook)
 {
-  this.title = oneBook.volumeInfo.title ? oneBook.volumeInfo.title : 'Unkonown',
-  this.authors = oneBook.volumeInfo.authors? oneBook.volumeInfo.authors : 'Unkonown', // array
-  this.description = oneBook.volumeInfo.description ? oneBook.volumeInfo.description : 'Unkonown' ,
+  this.title = oneBook.volumeInfo.title ? oneBook.volumeInfo.title : 'Unkonown Title',
+  this.author = oneBook.volumeInfo.authors? oneBook.volumeInfo.authors : 'Unkonown Author', // array
+  this.description = oneBook.volumeInfo.description ? oneBook.volumeInfo.description : 'No description available' ,
   this.imgUrl = oneBook.volumeInfo.imageLinks? oneBook.volumeInfo.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpg';
+  let reg = /ISBN/g;
+  this.isbn= reg.test(oneBook.volumeInfo.industryIdentifiers[0].type)? oneBook.volumeInfo.industryIdentifiers[0].identifier : 'No isbn';
+
 }
 
 server.get('*',(req,res)=>{

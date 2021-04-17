@@ -5,12 +5,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <link rel="stylesheet" href="styles/reset.css"> -->
-  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
   <title>Document</title>
 </head>
 <body>
+  <nav>
+    <div>
+    <a href="/">Home</a>
+    <a href="/searches/new">search the Google Books API</a>
+  </div>
+  </nav>
   <h1>Details</h1>
   
   <main>
@@ -34,7 +40,7 @@
     <form action="/updateBook/<%=detail.id%>?_method=put" method="post">
      <input type="text" name="title" placeholder="Populated title"  value=' <%= detail.title  %> '>
      <br>
-     <input type="text" name="author" placeholder="Populated author" value="<%= detail.author  %>">
+     <input type="text" name="author" placeholder="Populated author" value='<%= detail.author  %>'>
      <br>
      <input type="text" name="image_url" placeholder="Populated image url"value="<%= detail.image_url %>">
      <br>

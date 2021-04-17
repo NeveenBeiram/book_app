@@ -5,15 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
+    <nav>
+        <div>
+        <a href="/">Home</a>
+        <a href="/searches/new">search the Google Books API</a>
+      </div>
+      </nav>
+
    <h1>list of Books</h1> 
    <% renderBookData.forEach(item=> {%>
     <div>
 <img src="<%= item.imgUrl %>">
     <p><%= item.title%></p>
-    <p><%= item.authors%></p>
+    <p><%= item.author%></p>
     <p><%= item.description%></p>
+    <p><%=item.isbn%></p>
     <form action="/books" method="POST">
         <input type="hidden" name="title" value="<%= item.title %>">
         <input type="hidden" name="author" value="<%= item.author %>">
