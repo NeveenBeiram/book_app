@@ -16,14 +16,17 @@
           </div>
     </header> -->
     <main>
-        <h1>Book App</h1> 
-        <a href="/">Home</a>
-        <a href="/searches/new">Search The Google Books API</a>
-        <!-- <%console.log(books)%> -->
-        <br>
+        
+       
+        <nav>
+            <div>
+            <a href="/">Home</a>
+            <a href="/searches/new">search the Google Books API</a>
+          </div>
+          </nav>
         <p> Your Bookshelf has (<%= count%>) Books </p>
 
-<div>
+<div class="mainDiv">
 <% books.forEach(item=>{ %> 
 <img src="<%= item.image_url %>">
 <p><%= item.title %></p>

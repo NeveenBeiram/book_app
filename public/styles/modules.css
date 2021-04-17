@@ -1,0 +1,18 @@
+
+
+.mainDiv{
+    display: flex;
+flex-direction: column;
+justify-content: center;
+margin-left: 30%;
+}
+
+.mainDiv img{
+    width: 300px;
+    height: 300px; 
+    margin-bottom: 10px;
+    margin-top: 20px;}
+
+.mainDiv p{
+    line-height: 30px;
+}

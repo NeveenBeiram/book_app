@@ -1,0 +1,16 @@
+nav{
+    background: darkgray;
+    text-align: center;
+    height: 90px;
+    
+}
+nav a {
+    text-align: center;
+    margin-top: 20px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+color: rgb(70, 99, 179);
+}
+nav div a {
+    display: inline;
+    text-decoration: none;
+}
